@@ -1,5 +1,5 @@
  /* BoCA - BonkEnc Component Architecture
-  * Copyright (C) 2007-2022 Robert Kausch <robert.kausch@freac.org>
+  * Copyright (C) 2007-2026 Robert Kausch <robert.kausch@freac.org>
   *
   * This program is free software; you can redistribute it and/or
   * modify it under the terms of the GNU General Public License as
@@ -30,6 +30,7 @@ MP4CLOSE			 ex_MP4Close			= NIL;
 MP4OPTIMIZE			 ex_MP4Optimize			= NIL;
 
 MP4SETTRACKESCONFIGURATION	 ex_MP4SetTrackESConfiguration	= NIL;
+MP4SETTRACKINTEGERPROPERTY	 ex_MP4SetTrackIntegerProperty	= NIL;
 MP4SETAUDIOPROFILELEVEL		 ex_MP4SetAudioProfileLevel	= NIL;
 MP4ADDAUDIOTRACK		 ex_MP4AddAudioTrack		= NIL;
 MP4WRITESAMPLE			 ex_MP4WriteSample		= NIL;
@@ -88,6 +89,7 @@ Bool LoadMP4v2DLL()
 	ex_MP4Optimize			= (MP4OPTIMIZE) mp4v2dll->GetFunctionAddress("MP4Optimize");
 
 	ex_MP4SetTrackESConfiguration	= (MP4SETTRACKESCONFIGURATION) mp4v2dll->GetFunctionAddress("MP4SetTrackESConfiguration");
+	ex_MP4SetTrackIntegerProperty	= (MP4SETTRACKINTEGERPROPERTY) mp4v2dll->GetFunctionAddress("MP4SetTrackIntegerProperty");
 	ex_MP4SetAudioProfileLevel	= (MP4SETAUDIOPROFILELEVEL) mp4v2dll->GetFunctionAddress("MP4SetAudioProfileLevel");
 	ex_MP4AddAudioTrack		= (MP4ADDAUDIOTRACK) mp4v2dll->GetFunctionAddress("MP4AddAudioTrack");
 	ex_MP4WriteSample		= (MP4WRITESAMPLE) mp4v2dll->GetFunctionAddress("MP4WriteSample");
@@ -101,6 +103,7 @@ Bool LoadMP4v2DLL()
 	    ex_MP4Optimize			== NIL ||
 
 	    ex_MP4SetTrackESConfiguration	== NIL ||
+	    ex_MP4SetTrackIntegerProperty	== NIL ||
 	    ex_MP4SetAudioProfileLevel		== NIL ||
 	    ex_MP4AddAudioTrack			== NIL ||
 	    ex_MP4WriteSample			== NIL ||

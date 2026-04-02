@@ -1,5 +1,5 @@
  /* BoCA - BonkEnc Component Architecture
-  * Copyright (C) 2007-2020 Robert Kausch <robert.kausch@freac.org>
+  * Copyright (C) 2007-2026 Robert Kausch <robert.kausch@freac.org>
   *
   * This program is free software; you can redistribute it and/or
   * modify it under the terms of the GNU General Public License as
@@ -45,7 +45,12 @@ namespace CA
 };
 #endif
 
-MP4OPTIMIZE	 ex_MP4Optimize = NIL;
+MP4MODIFY			 ex_MP4Modify			= NIL;
+MP4CLOSE			 ex_MP4Close			= NIL;
+MP4OPTIMIZE			 ex_MP4Optimize			= NIL;
+
+MP4FINDTRACKID			 ex_MP4FindTrackId		= NIL;
+MP4SETTRACKINTEGERPROPERTY	 ex_MP4SetTrackIntegerProperty	= NIL;
 
 DynamicLoader *coreaudiodll	= NIL;
 DynamicLoader *mp4v2dll		= NIL;
@@ -346,9 +351,19 @@ Bool LoadMP4v2DLL()
 
 	if (mp4v2dll == NIL) return False;
 
-	ex_MP4Optimize = (MP4OPTIMIZE) mp4v2dll->GetFunctionAddress("MP4Optimize");
+	ex_MP4Modify			= (MP4MODIFY) mp4v2dll->GetFunctionAddress("MP4Modify");
+	ex_MP4Close			= (MP4CLOSE) mp4v2dll->GetFunctionAddress("MP4Close");
+	ex_MP4Optimize			= (MP4OPTIMIZE) mp4v2dll->GetFunctionAddress("MP4Optimize");
 
-	if (ex_MP4Optimize == NIL) { FreeMP4v2DLL(); return False; }
+	ex_MP4FindTrackId		= (MP4FINDTRACKID) mp4v2dll->GetFunctionAddress("MP4FindTrackId");
+	ex_MP4SetTrackIntegerProperty	= (MP4SETTRACKINTEGERPROPERTY) mp4v2dll->GetFunctionAddress("MP4SetTrackIntegerProperty");
+
+	if (ex_MP4Modify			== NIL ||
+	    ex_MP4Close				== NIL ||
+	    ex_MP4Optimize			== NIL ||
+
+	    ex_MP4FindTrackId			== NIL ||
+	    ex_MP4SetTrackIntegerProperty	== NIL) { FreeMP4v2DLL(); return False; }
 
 	return True;
 }

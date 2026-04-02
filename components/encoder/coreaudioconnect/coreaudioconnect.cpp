@@ -1,5 +1,5 @@
  /* BoCA - BonkEnc Component Architecture
-  * Copyright (C) 2007-2024 Robert Kausch <robert.kausch@freac.org>
+  * Copyright (C) 2007-2026 Robert Kausch <robert.kausch@freac.org>
   *
   * This program is free software; you can redistribute it and/or
   * modify it under the terms of the GNU General Public License as
@@ -285,6 +285,19 @@ Bool BoCA::EncoderCoreAudioConnect::Deactivate()
 			}
 
 			File(tempFile).Delete();
+		}
+
+		/* Fix number of channels in sound atom.
+		 */
+		if (mp4v2dll != NIL)
+		{
+			const Format	&format = track.GetFormat();
+
+			MP4FileHandle	 mp4File  = ex_MP4Modify(track.outputFile, 0);
+			MP4TrackId	 mp4Track = ex_MP4FindTrackId(mp4File, 0, MP4_AUDIO_TRACK_TYPE, 0);
+
+			ex_MP4SetTrackIntegerProperty(mp4File, mp4Track, "mdia.minf.stbl.stsd.*[0].channels", format.channels);
+			ex_MP4Close(mp4File, 0);
 		}
 
 		/* Write metadata to file.

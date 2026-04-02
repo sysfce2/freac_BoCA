@@ -1,5 +1,5 @@
  /* BoCA - BonkEnc Component Architecture
-  * Copyright (C) 2007-2022 Robert Kausch <robert.kausch@freac.org>
+  * Copyright (C) 2007-2026 Robert Kausch <robert.kausch@freac.org>
   *
   * This program is free software; you can redistribute it and/or
   * modify it under the terms of the GNU General Public License as
@@ -194,6 +194,7 @@ Bool BoCA::EncoderFAAC::Activate()
 		mp4Track = ex_MP4AddAudioTrack(mp4File, format.rate, MP4_INVALID_DURATION, MP4_MPEG4_AUDIO_TYPE);
 
 		ex_MP4SetAudioProfileLevel(mp4File, 0x0F);
+		ex_MP4SetTrackIntegerProperty(mp4File, mp4Track, "mdia.minf.stbl.stsd.mp4a.channels", format.channels);
 
 		unsigned char	*buffer = NIL;
 

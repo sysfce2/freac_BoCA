@@ -1,5 +1,5 @@
  /* BoCA - BonkEnc Component Architecture
-  * Copyright (C) 2007-2022 Robert Kausch <robert.kausch@freac.org>
+  * Copyright (C) 2007-2026 Robert Kausch <robert.kausch@freac.org>
   *
   * This program is free software; you can redistribute it and/or
   * modify it under the terms of the GNU General Public License as
@@ -576,15 +576,22 @@ Int BoCA::DecoderFDKAAC::ReadData(Buffer<UnsignedByte> &data)
 		}
 		else
 		{
-			samplesBuffer.Resize((samplesRead + 2 * frameSize) * format.channels);
+			/* Flush the decoder reading up to two more frames (some decoders
+			 * keep returning AAC_DEC_OK even after the end is reached, so we
+			 * have to limit the number of read attempts).
+			 */
+			for (Int i = 0; i < 2; i++)
+			{
+				samplesBuffer.Resize((samplesRead + frameSize) * format.channels);
 
-			short	*outputBuffer = samplesBuffer + samplesRead * format.channels;
+				short	*outputBuffer = samplesBuffer + samplesRead * format.channels;
 
-			ex_aacDecoder_DecodeFrame(handle, outputBuffer, 			      samplesBuffer.Size() -  samplesRead	       * format.channels, AACDEC_FLUSH);
-			ex_aacDecoder_DecodeFrame(handle, outputBuffer + frameSize * format.channels, samplesBuffer.Size() - (samplesRead + frameSize) * format.channels, AACDEC_FLUSH);
+				if (ex_aacDecoder_DecodeFrame(handle, outputBuffer, samplesBuffer.Size() - samplesRead * format.channels, AACDEC_FLUSH) != AAC_DEC_OK) break;
 
-			samplesRead += 2 * frameSize;
-			finished     = True;
+				samplesRead += frameSize;
+			}
+
+			finished = True;
 		}
 	}
 	else
@@ -639,15 +646,22 @@ Int BoCA::DecoderFDKAAC::ReadData(Buffer<UnsignedByte> &data)
 
 		if (driver->GetPos() == driver->GetSize())
 		{
-			samplesBuffer.Resize((samplesRead + 2 * frameSize) * format.channels);
+			/* Flush the decoder reading up to two more frames (some decoders
+			 * keep returning AAC_DEC_OK even after the end is reached, so we
+			 * have to limit the number of read attempts).
+			 */
+			for (Int i = 0; i < 2; i++)
+			{
+				samplesBuffer.Resize((samplesRead + frameSize) * format.channels);
 
-			short	*outputBuffer = samplesBuffer + samplesRead * format.channels;
+				short	*outputBuffer = samplesBuffer + samplesRead * format.channels;
 
-			ex_aacDecoder_DecodeFrame(handle, outputBuffer, 			      samplesBuffer.Size() -  samplesRead	       * format.channels, AACDEC_FLUSH);
-			ex_aacDecoder_DecodeFrame(handle, outputBuffer + frameSize * format.channels, samplesBuffer.Size() - (samplesRead + frameSize) * format.channels, AACDEC_FLUSH);
+				if (ex_aacDecoder_DecodeFrame(handle, outputBuffer, samplesBuffer.Size() - samplesRead * format.channels, AACDEC_FLUSH) != AAC_DEC_OK) break;
 
-			samplesRead += 2 * frameSize;
-			finished     = True;
+				samplesRead += frameSize;
+			}
+
+			finished = True;
 		}
 	}
 

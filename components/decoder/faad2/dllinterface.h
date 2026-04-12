@@ -1,5 +1,5 @@
  /* BoCA - BonkEnc Component Architecture
-  * Copyright (C) 2007-2022 Robert Kausch <robert.kausch@freac.org>
+  * Copyright (C) 2007-2026 Robert Kausch <robert.kausch@freac.org>
   *
   * This program is free software; you can redistribute it and/or
   * modify it under the terms of the GNU General Public License as
@@ -59,6 +59,7 @@ typedef void				(*MP4CLOSE)				(MP4FileHandle, uint32_t);
 typedef void				(*MP4FREE)				(void *);
 typedef MP4TrackId			(*MP4FINDTRACKID)			(MP4FileHandle, uint16_t, const char *, uint8_t);
 typedef uint8_t				(*MP4GETTRACKAUDIOMPEG4TYPE)		(MP4FileHandle, MP4TrackId);
+typedef int				(*MP4GETTRACKAUDIOCHANNELS)		(MP4FileHandle, MP4TrackId);
 typedef bool				(*MP4GETTRACKESCONFIGURATION)		(MP4FileHandle, MP4TrackId, uint8_t **, uint32_t *);
 typedef uint32_t			(*MP4GETTRACKTIMESCALE)			(MP4FileHandle, MP4TrackId);
 typedef MP4SampleId			(*MP4GETTRACKNUMBEROFSAMPLES)		(MP4FileHandle, MP4TrackId);
@@ -75,6 +76,7 @@ extern MP4CLOSE				 ex_MP4Close;
 extern MP4FREE				 ex_MP4Free;
 extern MP4FINDTRACKID			 ex_MP4FindTrackId;
 extern MP4GETTRACKAUDIOMPEG4TYPE	 ex_MP4GetTrackAudioMpeg4Type;
+extern MP4GETTRACKAUDIOCHANNELS		 ex_MP4GetTrackAudioChannels;
 extern MP4GETTRACKESCONFIGURATION	 ex_MP4GetTrackESConfiguration;
 extern MP4GETTRACKTIMESCALE		 ex_MP4GetTrackTimeScale;
 extern MP4GETTRACKNUMBEROFSAMPLES	 ex_MP4GetTrackNumberOfSamples;

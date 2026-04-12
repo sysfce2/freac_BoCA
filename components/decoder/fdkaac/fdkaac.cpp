@@ -216,6 +216,8 @@ Error BoCA::DecoderFDKAAC::GetStreamInfo(const String &streamURI, Track &track)
 				format.rate	= streamInfo->sampleRate;
 				format.channels = streamInfo->numChannels;
 
+				if (format.channels == 2 && ex_MP4GetTrackAudioChannels(mp4File, mp4Track) == 1) format.channels = 1;
+
 				track.length	= Int64(ex_MP4GetTrackNumberOfSamples(mp4File, mp4Track)) * streamInfo->frameSize;
 				track.length   -= streamInfo->frameSize; // To account for encoder delay.
 
@@ -531,17 +533,19 @@ Int BoCA::DecoderFDKAAC::ReadData(Buffer<UnsignedByte> &data)
 				ex_aacDecoder_Fill(handle, &inputBuffer, &inputBufferSize, &bytesValid);
 			}
 
-			if (frameSize == 0) samplesBuffer.Resize((samplesRead + maxFrameSize) * format.channels);
-			else		    samplesBuffer.Resize((samplesRead + frameSize) * format.channels);
+			Int	 bufferChannels = Math::Max(2, format.channels);
+
+			if (frameSize == 0) samplesBuffer.Resize(samplesRead * format.channels + maxFrameSize * bufferChannels);
+			else		    samplesBuffer.Resize(samplesRead * format.channels + frameSize * bufferChannels);
 
 			short	*outputBuffer = samplesBuffer + samplesRead * format.channels;
 
 			if (ex_aacDecoder_DecodeFrame(handle, outputBuffer, samplesBuffer.Size() - samplesRead * format.channels, 0) == AAC_DEC_OK)
 			{
+				CStreamInfo	*streamInfo = ex_aacDecoder_GetStreamInfo(handle);
+
 				if (frameSize == 0)
 				{
-					CStreamInfo	*streamInfo = ex_aacDecoder_GetStreamInfo(handle);
-
 					frameSize = streamInfo->frameSize;
 					sbrRatio  = streamInfo->frameSize / streamInfo->aacSamplesPerFrame;
 
@@ -567,9 +571,14 @@ Int BoCA::DecoderFDKAAC::ReadData(Buffer<UnsignedByte> &data)
 					/* Add FDK decoder delay.
 					 */
 					delaySamplesLeft += streamInfo->outputDelay;
-
-					samplesBuffer.Resize((samplesRead + frameSize) * format.channels);
 				}
+
+				if (format.channels == 1 && streamInfo->numChannels == 2)
+				{
+					for (Int i = 0; i < frameSize; i++) samplesBuffer[samplesRead + i] = samplesBuffer[samplesRead + i * 2];
+				}
+
+				samplesBuffer.Resize((samplesRead + frameSize) * format.channels);
 
 				samplesRead += frameSize;
 			}
@@ -582,12 +591,23 @@ Int BoCA::DecoderFDKAAC::ReadData(Buffer<UnsignedByte> &data)
 			 */
 			for (Int i = 0; i < 2; i++)
 			{
-				samplesBuffer.Resize((samplesRead + frameSize) * format.channels);
+				Int	 bufferChannels = Math::Max(2, format.channels);
+
+				samplesBuffer.Resize(samplesRead * format.channels + frameSize * bufferChannels);
 
 				short	*outputBuffer = samplesBuffer + samplesRead * format.channels;
 
 				if (ex_aacDecoder_DecodeFrame(handle, outputBuffer, samplesBuffer.Size() - samplesRead * format.channels, AACDEC_FLUSH) != AAC_DEC_OK) break;
 
+				CStreamInfo	*streamInfo = ex_aacDecoder_GetStreamInfo(handle);
+
+				if (format.channels == 1 && streamInfo->numChannels == 2)
+				{
+					for (Int i = 0; i < frameSize; i++) samplesBuffer[samplesRead + i] = samplesBuffer[samplesRead + i * 2];
+				}
+
+				samplesBuffer.Resize((samplesRead + frameSize) * format.channels);
+	
 				samplesRead += frameSize;
 			}
 

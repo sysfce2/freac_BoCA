@@ -1,5 +1,5 @@
  /* BoCA - BonkEnc Component Architecture
-  * Copyright (C) 2007-2022 Robert Kausch <robert.kausch@freac.org>
+  * Copyright (C) 2007-2026 Robert Kausch <robert.kausch@freac.org>
   *
   * This program is free software; you can redistribute it and/or
   * modify it under the terms of the GNU General Public License as
@@ -27,6 +27,7 @@ MP4CLOSE			 ex_MP4Close				= NIL;
 MP4FREE				 ex_MP4Free				= NIL;
 MP4FINDTRACKID			 ex_MP4FindTrackId			= NIL;
 MP4GETTRACKAUDIOMPEG4TYPE	 ex_MP4GetTrackAudioMpeg4Type		= NIL;
+MP4GETTRACKAUDIOCHANNELS	 ex_MP4GetTrackAudioChannels		= NIL;
 MP4GETTRACKESCONFIGURATION	 ex_MP4GetTrackESConfiguration		= NIL;
 MP4GETTRACKTIMESCALE		 ex_MP4GetTrackTimeScale		= NIL;
 MP4GETTRACKNUMBEROFSAMPLES	 ex_MP4GetTrackNumberOfSamples		= NIL;
@@ -84,6 +85,7 @@ Bool LoadMP4v2DLL()
 	ex_MP4Free			= (MP4FREE) mp4v2dll->GetFunctionAddress("MP4Free");
 	ex_MP4FindTrackId		= (MP4FINDTRACKID) mp4v2dll->GetFunctionAddress("MP4FindTrackId");
 	ex_MP4GetTrackAudioMpeg4Type	= (MP4GETTRACKAUDIOMPEG4TYPE) mp4v2dll->GetFunctionAddress("MP4GetTrackAudioMpeg4Type");
+	ex_MP4GetTrackAudioChannels	= (MP4GETTRACKAUDIOCHANNELS) mp4v2dll->GetFunctionAddress("MP4GetTrackAudioChannels");
 	ex_MP4GetTrackESConfiguration	= (MP4GETTRACKESCONFIGURATION) mp4v2dll->GetFunctionAddress("MP4GetTrackESConfiguration");
 	ex_MP4GetTrackTimeScale		= (MP4GETTRACKTIMESCALE) mp4v2dll->GetFunctionAddress("MP4GetTrackTimeScale");
 	ex_MP4GetTrackNumberOfSamples	= (MP4GETTRACKNUMBEROFSAMPLES) mp4v2dll->GetFunctionAddress("MP4GetTrackNumberOfSamples");
@@ -100,6 +102,7 @@ Bool LoadMP4v2DLL()
 	    ex_MP4Free				== NIL ||
 	    ex_MP4FindTrackId			== NIL ||
 	    ex_MP4GetTrackAudioMpeg4Type	== NIL ||
+	    ex_MP4GetTrackAudioChannels		== NIL ||
 	    ex_MP4GetTrackESConfiguration	== NIL ||
 	    ex_MP4GetTrackTimeScale		== NIL ||
 	    ex_MP4GetTrackNumberOfSamples	== NIL ||

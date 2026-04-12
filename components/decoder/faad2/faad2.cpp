@@ -1,5 +1,5 @@
  /* BoCA - BonkEnc Component Architecture
-  * Copyright (C) 2007-2022 Robert Kausch <robert.kausch@freac.org>
+  * Copyright (C) 2007-2026 Robert Kausch <robert.kausch@freac.org>
   *
   * This program is free software; you can redistribute it and/or
   * modify it under the terms of the GNU General Public License as
@@ -172,6 +172,8 @@ Error BoCA::DecoderFAAD2::GetStreamInfo(const String &streamURI, Track &track)
 				errorString = "Unsupported audio format";
 			}
 
+			if (format.channels == 2 && ex_MP4GetTrackAudioChannels(mp4File, mp4Track) == 1) format.channels = 1;
+
 			ex_MP4Free(escBuffer);
 
 			/* Decode frames to get frame size.
@@ -193,7 +195,7 @@ Error BoCA::DecoderFAAD2::GetStreamInfo(const String &streamURI, Track &track)
 					errorString = "Unsupported audio format";
 				}
 
-				frameSize = frameInfo.samples / format.channels;
+				frameSize = frameInfo.samples / frameInfo.channels;
 
 				if (frameInfo.sbr == SBR_UPSAMPLED ||
 				    frameInfo.sbr == NO_SBR_UPSAMPLED) sbrRatio = 2;
@@ -563,7 +565,14 @@ Int BoCA::DecoderFAAD2::ReadData(Buffer<UnsignedByte> &data)
 
 			samplesBuffer.Resize(samplesRead * format.channels + frameInfo.samples);
 
-			memcpy(samplesBuffer + samplesRead * format.channels, samples, frameInfo.samples * (format.bits / 8));
+			if (format.channels == 1 && frameInfo.channels == 2)
+			{
+				for (UnsignedInt i = 0; i < frameInfo.samples; i++) samplesBuffer[samplesRead + i] = ((int16_t *) samples)[i * 2];
+			}
+			else
+			{
+				memcpy(samplesBuffer + samplesRead * format.channels, samples, frameInfo.samples * (format.bits / 8));
+			}
 
 			samplesRead += frameSize;
 		}

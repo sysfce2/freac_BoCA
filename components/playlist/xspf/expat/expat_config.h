@@ -25,6 +25,9 @@
 /* Define to 1 if you have the <fcntl.h> header file. */
 #define HAVE_FCNTL_H 1
 
+/* Define to 1 if you have the `getentropy' function. */
+/* #undef HAVE_GETENTROPY */
+
 /* Define to 1 if you have the 'getpagesize' function. */
 #define HAVE_GETPAGESIZE 1
 
@@ -80,7 +83,7 @@
 #define PACKAGE_NAME "expat"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "expat 2.7.5"
+#define PACKAGE_STRING "expat 2.8.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "expat"
@@ -89,7 +92,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.7.5"
+#define PACKAGE_VERSION "2.8.0"
 
 /* Define to 1 if all of the C89 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for
@@ -97,7 +100,7 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "2.7.5"
+#define VERSION "2.8.0"
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */
@@ -120,7 +123,7 @@
 #define XML_CONTEXT_BYTES 1024
 
 /* Define to include code reading entropy from `/dev/urandom'. */
-#define XML_DEV_URANDOM 1
+/* #undef XML_DEV_URANDOM */
 
 /* Define to make parameter entity parsing functionality available. */
 #define XML_DTD 1

@@ -9,7 +9,7 @@ ifeq ($(BUILD_WIN32),True)
 	OBJECTS += random_rand_s.o
 endif
 
-CCOPTS	= -I"$(SRCDIR)" -DHAVE_EXPAT_CONFIG_H
+CCOPTS	= -I"$(SRCDIR)" -DHAVE_EXPAT_CONFIG_H -DXML_POOR_ENTROPY
 AR	= ar
 
 ifneq ($(BUILD_WIN32),True)

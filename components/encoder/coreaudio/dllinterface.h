@@ -17,9 +17,10 @@
 #endif
 
 #ifdef __APPLE__
-	/* Prevent math functions from landing in the CA namespace.
+	/* Prevent math and stdlib functions from landing in the CA namespace.
 	 */
 #	include <math.h>
+#	include <stdlib.h>
 #endif
 
 namespace CA

@@ -1,5 +1,5 @@
  /* BoCA - BonkEnc Component Architecture
-  * Copyright (C) 2007-2020 Robert Kausch <robert.kausch@freac.org>
+  * Copyright (C) 2007-2026 Robert Kausch <robert.kausch@freac.org>
   *
   * This program is free software; you can redistribute it and/or
   * modify it under the terms of the GNU General Public License as
@@ -12,6 +12,12 @@
 
 #include <smooth.h>
 #include <math.h>
+
+#ifdef __APPLE__
+	/* Prevent stdlib functions from landing in the CA namespace.
+	 */
+#	include <stdlib.h>
+#endif
 
 namespace CA
 {

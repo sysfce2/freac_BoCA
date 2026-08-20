@@ -58,7 +58,7 @@ Bool LoadMACDLL()
 	 */
 	unsigned int	 interfaceVersion = ex_GetLibraryInterfaceVersion();
 
-	if (interfaceVersion > 15) { FreeMACDLL(); return False; }
+	if (interfaceVersion > APE_INTERFACE_VERSION) { FreeMACDLL(); return False; }
 
 	return True;
 }
